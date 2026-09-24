@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ceramic Resonator — Shape Terracotta with Sound</title>
+    <meta name="description" content="Ceramic Resonator is a tactile pottery puzzle. Tap bronze tabs, send resonance through clay, and match ancient surface profiles across 20 handcrafted levels.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --kiln: #140e0c;
+            --ash: #241814;
+            --clay: #c4622d;
+            --ember: #e39a55;
+            --bronze: #c6a36a;
+            --cream: #f6efe4;
+            --mist: #cbb8a8;
+            --glaze: #7f9a86;
+            --soot: #3a2822;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: "Outfit", -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--cream);
+            min-height: 100vh;
+            background:
+                radial-gradient(ellipse 55% 40% at 80% 0%, rgba(196, 98, 45, 0.28), transparent 60%),
+                radial-gradient(ellipse 40% 30% at 0% 100%, rgba(127, 154, 134, 0.12), transparent 55%),
+                linear-gradient(165deg, #1c1210 0%, var(--kiln) 42%, #0e0a09 100%);
+            overflow-x: hidden;
+        }
+
+        .dust {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background-image:
+                radial-gradient(circle, rgba(246, 239, 228, 0.55) 0 1px, transparent 1.6px),
+                radial-gradient(circle, rgba(227, 154, 85, 0.45) 0 1px, transparent 1.8px);
+            background-size: 140px 180px, 220px 260px;
+            background-position: 20px 40px, 80px 120px;
+            animation: floatdust 22s linear infinite;
+            opacity: 0.35;
+        }
+
+        @keyframes floatdust {
+            from { background-position: 20px 40px, 80px 120px; }
+            to { background-position: 40px -80px, 20px -40px; }
+        }
+
+        .wrap {
+            position: relative;
+            z-index: 1;
+            max-width: 1040px;
+            margin: 0 auto;
+            padding: 28px 22px 64px;
+        }
+
+        header.bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 36px;
+        }
+
+        .mark {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--cream);
+        }
+
+        .ring {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background:
+                radial-gradient(circle at 40% 35%, #f0c48a, var(--clay) 46%, #6e3118 80%);
+            box-shadow:
+                inset 0 0 0 6px rgba(20, 14, 12, 0.28),
+                inset 0 0 0 8px rgba(246, 239, 228, 0.35),
+                0 0 0 2px rgba(198, 163, 106, 0.45);
+        }
+
+        .mark strong {
+            font-family: "Fraunces", serif;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            font-size: 0.98rem;
+        }
+
+        .mark span {
+            display: block;
+            font-size: 0.68rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--bronze);
+            font-weight: 600;
+        }
+
+        .bar nav {
+            display: flex;
+            gap: 18px;
+            font-size: 0.92rem;
+            font-weight: 600;
+        }
+
+        .bar nav a {
+            color: var(--mist);
+            text-decoration: none;
+        }
+
+        .bar nav a:hover { color: var(--ember); }
+
+        .stage {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 36px;
+            align-items: center;
+            padding: 12px 0 40px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--ember);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .eyebrow::before {
+            content: "";
+            width: 28px;
+            height: 2px;
+            background: var(--clay);
+        }
+
+        h1 {
+            font-family: "Fraunces", serif;
+            font-weight: 700;
+            font-size: clamp(2.5rem, 6vw, 4.4rem);
+            line-height: 0.95;
+            letter-spacing: -0.03em;
+            margin-bottom: 18px;
+        }
+
+        h1 em {
+            font-style: italic;
+            font-weight: 560;
+            color: var(--ember);
+        }
+
+        .lede {
+            font-size: 1.08rem;
+            line-height: 1.7;
+            color: var(--mist);
+            max-width: 540px;
+            margin-bottom: 22px;
+        }
+
+        .facts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 26px;
+        }
+
+        .facts span {
+            border: 1px solid rgba(198, 163, 106, 0.35);
+            background: rgba(58, 40, 34, 0.55);
+            color: var(--cream);
+            border-radius: 999px;
+            padding: 7px 14px;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            border-radius: 999px;
+            padding: 14px 22px;
+            transition: transform 0.18s ease, filter 0.18s ease;
+        }
+
+        .btn:hover { transform: translateY(-2px); }
+
+        .btn-clay {
+            background: linear-gradient(180deg, #e08a45, var(--clay));
+            color: #1a0e0a;
+            box-shadow: 0 12px 30px rgba(196, 98, 45, 0.35);
+        }
+
+        .btn-quiet {
+            color: var(--cream);
+            border: 1px solid rgba(246, 239, 228, 0.28);
+            background: transparent;
+        }
+
+        .vessel {
+            justify-self: center;
+            width: min(320px, 80vw);
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background:
+                radial-gradient(circle at 38% 32%, #f3d2a4 0%, #d98448 28%, #a34724 58%, #4a2418 100%);
+            box-shadow:
+                inset -18px -24px 40px rgba(40, 16, 8, 0.45),
+                inset 10px 12px 24px rgba(255, 220, 180, 0.25),
+                0 30px 70px rgba(0, 0, 0, 0.45);
+            position: relative;
+        }
+
+        .vessel i {
+            position: absolute;
+            border-radius: 50%;
+            border: 1.5px solid rgba(246, 239, 228, 0.38);
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            animation: ripple 5.6s ease-out infinite;
+        }
+
+        .vessel i:nth-child(1) { width: 28%; height: 28%; animation-delay: 0s; }
+        .vessel i:nth-child(2) { width: 48%; height: 48%; animation-delay: 0.7s; }
+        .vessel i:nth-child(3) { width: 68%; height: 68%; animation-delay: 1.4s; }
+        .vessel i:nth-child(4) { width: 86%; height: 86%; animation-delay: 2.1s; }
+
+        .hub {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 18px;
+            height: 18px;
+            margin: -9px 0 0 -9px;
+            border-radius: 50%;
+            background: var(--bronze);
+            box-shadow: 0 0 16px rgba(227, 154, 85, 0.8);
+        }
+
+        @keyframes ripple {
+            0% { opacity: 0.15; }
+            40% { opacity: 0.7; }
+            100% { opacity: 0.2; }
+        }
+
+        .bench {
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            gap: 22px;
+            padding: 28px 0 8px;
+            border-top: 1px solid rgba(198, 163, 106, 0.22);
+        }
+
+        .bench h2, .walk h2, .grid-head h2 {
+            font-family: "Fraunces", serif;
+            font-weight: 700;
+            font-size: 1.7rem;
+            letter-spacing: -0.02em;
+        }
+
+        .bench p.note {
+            color: var(--mist);
+            margin-top: 8px;
+            line-height: 1.55;
+            font-size: 0.95rem;
+        }
+
+        .tiles {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .tile {
+            background: linear-gradient(180deg, rgba(58, 40, 34, 0.75), rgba(20, 14, 12, 0.4));
+            border: 1px solid rgba(198, 163, 106, 0.22);
+            border-radius: 18px;
+            padding: 18px 16px 16px;
+            min-height: 148px;
+        }
+
+        .tile b {
+            display: block;
+            font-family: "Fraunces", serif;
+            font-size: 1.55rem;
+            color: var(--ember);
+            margin-bottom: 6px;
+        }
+
+        .tile span {
+            color: var(--mist);
+            font-size: 0.92rem;
+            line-height: 1.45;
+        }
+
+        .grid-head {
+            margin-top: 42px;
+            margin-bottom: 16px;
+            max-width: 640px;
+        }
+
+        .grid-head p {
+            color: var(--mist);
+            margin-top: 8px;
+            line-height: 1.6;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 12px;
+        }
+
+        .card {
+            background: rgba(36, 24, 20, 0.72);
+            border-radius: 22px;
+            padding: 22px 22px 20px;
+            border: 1px solid rgba(246, 239, 228, 0.06);
+        }
+
+        .card.wide { grid-column: 1 / -1; display: grid; grid-template-columns: 1.1fr 1fr; gap: 18px; }
+
+        .card h3 {
+            font-family: "Fraunces", serif;
+            font-size: 1.25rem;
+            margin-bottom: 8px;
+            color: var(--cream);
+        }
+
+        .card p { color: var(--mist); line-height: 1.65; font-size: 0.98rem; }
+
+        .kicker {
+            color: var(--glaze);
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .walk {
+            margin-top: 42px;
+            background:
+                linear-gradient(180deg, rgba(196, 98, 45, 0.16), rgba(20, 14, 12, 0.2));
+            border: 1px solid rgba(196, 98, 45, 0.28);
+            border-radius: 28px;
+            padding: 28px 26px 22px;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .step {
+            padding-top: 12px;
+            border-top: 2px solid rgba(198, 163, 106, 0.45);
+        }
+
+        .step em {
+            font-family: "Fraunces", serif;
+            font-style: italic;
+            color: var(--ember);
+            font-size: 0.95rem;
+        }
+
+        .step p {
+            margin-top: 8px;
+            color: var(--mist);
+            font-size: 0.92rem;
+            line-height: 1.55;
+        }
+
+        footer.colophon {
+            margin-top: 36px;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            color: rgba(203, 184, 168, 0.75);
+            font-size: 0.82rem;
+        }
+
+        footer.colophon a { color: var(--bronze); text-decoration: none; }
+        footer.colophon a:hover { text-decoration: underline; }
+
+        @media (max-width: 860px) {
+            .stage, .bench, .cards, .card.wide, .steps { grid-template-columns: 1fr; }
+            .card.wide { display: block; }
+            .bench { gap: 14px; }
+            header.bar { align-items: flex-start; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .dust, .vessel i { animation: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="dust" aria-hidden="true"></div>
+    <div class="wrap">
+        <header class="bar">
+            <a class="mark" href="index.html">
+                <span class="ring" aria-hidden="true"></span>
+                <span>
+                    <strong>Ceramic Resonator</strong>
+                    <span>Pottery puzzle</span>
+                </span>
+            </a>
+            <nav>
+                <a href="#craft">The craft</a>
+                <a href="privacy.html">Privacy</a>
+            </nav>
+        </header>
+
+        <section class="stage">
+            <div>
+                <p class="eyebrow">Casual · Free · iPhone &amp; iPad</p>
+                <h1>Shape clay<br>with <em>sound.</em></h1>
+                <p class="lede">
+                    Step into a warm pottery workshop and solve a tactile vibration puzzle. Read the target profile, tap bronze hardware tabs, and send resonance rippling through rough terracotta until the surface matches.
+                </p>
+                <div class="facts">
+                    <span>20 handcrafted levels</span>
+                    <span>Three difficulty phases</span>
+                    <span>No timers</span>
+                    <span>3-star scoring</span>
+                </div>
+                <div class="actions">
+                    <a class="btn btn-clay" href="https://apps.apple.com/us/app/ceramic-resonator/id6813422708?uo=4" target="_blank" rel="noopener noreferrer">Download on the App Store</a>
+                    <a class="btn btn-quiet" href="privacy.html">Privacy notice</a>
+                </div>
+            </div>
+            <div class="vessel" role="img" aria-label="A terracotta disc with expanding resonance rings">
+                <i></i><i></i><i></i><i></i>
+                <span class="hub"></span>
+            </div>
+        </section>
+
+        <section class="bench" aria-label="At a glance">
+            <div>
+                <h2>In the kiln</h2>
+                <p class="note">A relaxing session with room to experiment. Missed waves are part of finding the combination.</p>
+            </div>
+            <div class="tiles">
+                <article class="tile">
+                    <b>Listen</b>
+                    <span>Study the target configuration before you touch a tab.</span>
+                </article>
+                <article class="tile">
+                    <b>Tap</b>
+                    <span>Bronze fittings launch warm waves across the clay body.</span>
+                </article>
+                <article class="tile">
+                    <b>Match</b>
+                    <span>Fewer taps, closer profiles, and a perfect three-star firing.</span>
+                </article>
+            </div>
+        </section>
+
+        <section id="craft">
+            <div class="grid-head">
+                <h2>How the workshop plays</h2>
+                <p>Ceramic Resonator is a physical-simulation puzzle: the terracotta actually curves and settles under each resonance, rendered with detailed surface shaders.</p>
+            </div>
+            <div class="cards">
+                <article class="card">
+                    <p class="kicker">Physics</p>
+                    <h3>The clay answers every tap</h3>
+                    <p>Watch the surface deform as waves travel. Rough texture, burnt-orange light, and drifting studio dust keep the bench feeling lived-in rather than abstract.</p>
+                </article>
+                <article class="card">
+                    <p class="kicker">Combinations</p>
+                    <h3>Tabs, cancellations, falloff</h3>
+                    <p>Start with a single vibration. Later profiles ask you to cancel waves against each other and judge how strength fades with distance.</p>
+                </article>
+                <article class="card wide">
+                    <div>
+                        <p class="kicker">Twenty profiles</p>
+                        <h3>Three phases, one quiet rule</h3>
+                        <p>Levels are handcrafted and grow more tactical, yet nothing rushes you. There is no countdown and no instant fail for trying a bold pattern. Take the time the clay needs.</p>
+                    </div>
+                    <div>
+                        <p class="kicker">Stars</p>
+                        <h3>Score the firing, not the clock</h3>
+                        <p>Plan the shortest sequence that reproduces the target. Clean solutions earn three stars; messy ones still teach the next profile.</p>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="walk">
+            <h2>A single firing</h2>
+            <div class="steps">
+                <article class="step">
+                    <em>01 · Read</em>
+                    <p>Compare the blank clay with the ancient profile you are asked to recreate.</p>
+                </article>
+                <article class="step">
+                    <em>02 · Choose</em>
+                    <p>Pick which bronze tabs to strike, and in what order the waves should meet.</p>
+                </article>
+                <article class="step">
+                    <em>03 · Shape</em>
+                    <p>Let resonance bend the surface. Adjust when two waves erase each other.</p>
+                </article>
+                <article class="step">
+                    <em>04 · Rate</em>
+                    <p>Lock the match. Chase fewer taps if you want the full three stars.</p>
+                </article>
+            </div>
+        </section>
+
+        <footer class="colophon">
+            <p>© 2026 Ceramic Resonator. Casual puzzle for iPhone and iPad. Requires iOS 15 or later.</p>
+            <p><a href="privacy.html">Privacy</a> · <a href="https://apps.apple.com/us/app/ceramic-resonator/id6813422708?uo=4" target="_blank" rel="noopener noreferrer">App Store</a></p>
+        </footer>
+    </div>
+</body>
+</html>
